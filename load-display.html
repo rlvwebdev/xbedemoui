@@ -3,725 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Load tracking display showing shipment details with progress indicators">
-  <title>Load Display - Shipment Tracking</title>
-  
+  <title>Load Display</title>
   <style>
-    /* ==================
-       CSS Reset & Base
-       ================== */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    :root {
-      --text-color: #333;
-      --text-muted: #666;
-      --border-color: #ddd;
-      --row-bg: #fff;
-      --row-alt-bg: #f8f8f8;
-      --row-hover: #f0f0f0;
-      --header-bg: #e9e9e9;
-      --progress-25: #fee;
-      --progress-50: #ffe;
-      --progress-75: #eff;
-      --progress-100: #efe;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      line-height: 1.5;
-      color: var(--text-color);
-      background-color: #fff;
-      padding: 20px;
-    }
-    
-    /* ==================
-       Layout
-       ================== */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    header {
-      background-color: var(--header-bg);
-      padding: 16px 20px;
-      border: 1px solid var(--border-color);
-      margin-bottom: 20px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      padding: 10px;
     }
     
     h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
+      padding: 8px 0;
+      font-size: 18px;
+      margin-bottom: 10px;
     }
     
-    /* ==================
-       Load List
-       ================== */
     .load-list {
-      border: 1px solid var(--border-color);
+      border: 1px solid #ccc;
     }
     
-    .load-item {
-      border-bottom: 1px solid var(--border-color);
-      background-color: var(--row-bg);
+    .load-row {
+      border-bottom: 1px solid #ccc;
       cursor: pointer;
     }
     
-    .load-item:last-child {
+    .load-row:last-child {
       border-bottom: none;
     }
     
-    .load-item:hover {
-      background-color: var(--row-hover);
-    }
+    .load-row[data-progress="25"] { background: #ffe8e8; }
+    .load-row[data-progress="50"] { background: #fff8e8; }
+    .load-row[data-progress="75"] { background: #e8f8ff; }
+    .load-row[data-progress="100"] { background: #e8ffe8; }
     
-    /* Progress indicator */
-    .load-item[data-progress="25"] {
-      background-color: var(--progress-25);
-    }
-    
-    .load-item[data-progress="50"] {
-      background-color: var(--progress-50);
-    }
-    
-    .load-item[data-progress="75"] {
-      background-color: var(--progress-75);
-    }
-    
-    .load-item[data-progress="100"] {
-      background-color: var(--progress-100);
-    }
-    
-    .load-content {
+    .row-main {
       display: grid;
       grid-template-columns: 1fr;
-      padding: 12px 16px;
+      padding: 6px 10px;
+      gap: 4px;
     }
     
-    /* ==================
-       Load Columns
-       ================== */
-    .load-column {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .load-info {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: 8px;
-      align-items: baseline;
-    }
-    
-    .load-label {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-    
-    .load-value {
-      font-size: 0.875rem;
-      color: var(--text-color);
-    }
-    
-    .load-number {
-      font-size: 1.125rem;
-      font-weight: 600;
-    }
-    
-    /* Mobile Toggle Button */
-    .load-toggle {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: start;
-      width: 100%;
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      text-align: left;
-      gap: 16px;
-    }
-    
-    .toggle-icon {
-      font-size: 1.25rem;
-      line-height: 1;
-      color: var(--text-muted);
-    }
-    
-    .load-toggle[aria-expanded="true"] .toggle-icon::before {
-      content: '−';
-    }
-    
-    .load-toggle[aria-expanded="false"] .toggle-icon::before {
-      content: '+';
-    }
-    
-    /* Hidden details on mobile */
-    .load-details {
+    .row-details {
       display: none;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-color);
-      margin-top: 12px;
+      padding: 6px 10px;
+      border-top: 1px solid #ddd;
+      background: #fafafa;
     }
     
-    .load-details.expanded {
-      display: grid;
+    .row-details.open {
+      display: block;
     }
     
-    /* Status Badge */
-    .status-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border: 1px solid var(--border-color);
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
+    .col { display: flex; gap: 12px; }
+    .col div { white-space: nowrap; }
     
-    /* ==================
-       Responsive Design
-       ================== */
     @media (min-width: 768px) {
-      .load-content {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-      
-      .load-toggle {
-        pointer-events: none;
+      .row-main {
         grid-template-columns: 1fr 1fr 1fr;
+        gap: 15px;
       }
       
-      .toggle-icon {
-        display: none;
+      .row-details {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
       }
       
-      .load-details {
-        display: contents;
-      }
-    }
-    
-    /* ==================
-       Utilities
-       ================== */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border-width: 0;
+      .col { flex-direction: column; gap: 2px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Load Display</h1>
-    </header>
+  <h1>Load Display</h1>
+  
+  <div class="load-list">
     
-    <main>
-      <div class="load-list" role="list">
-        
-        <!-- Load Item 1 -->
-        <article class="load-item" data-progress="75" role="listitem">
-          <div class="load-content">
-            <button class="load-toggle" aria-expanded="false" aria-controls="load-details-1">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Load Number:</span>
-                  <span class="load-value load-number">LD-10234</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Shipper:</span>
-                  <span class="load-value">ABC Manufacturing Co.</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Product:</span>
-                  <span class="load-value">Industrial Equipment</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Status:</span>
-                  <span class="status-badge">In Transit</span>
-                </div>
-              </div>
-              <span class="toggle-icon" aria-hidden="true"></span>
-            </button>
-            
-            <div class="load-details" id="load-details-1">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Pickup City:</span>
-                  <span class="load-value">Chicago, IL</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-28T08:00">Dec 28, 08:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-28T12:00">Dec 28, 12:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-4523 / TRL-8901</span>
-                </div>
-              </div>
-              
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Delivery Point:</span>
-                  <span class="load-value">Dallas, TX</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-30T14:00">Dec 30, 02:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-30T18:00">Dec 30, 06:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-4523 / TRL-8901</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-        
-        <!-- Load Item 2 -->
-        <article class="load-item" data-progress="100" role="listitem">
-          <div class="load-content">
-            <button class="load-toggle" aria-expanded="false" aria-controls="load-details-2">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Load Number:</span>
-                  <span class="load-value load-number">LD-10198</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Shipper:</span>
-                  <span class="load-value">Global Logistics Inc.</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Product:</span>
-                  <span class="load-value">Electronics</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Status:</span>
-                  <span class="status-badge">Delivered</span>
-                </div>
-              </div>
-              <span class="toggle-icon" aria-hidden="true"></span>
-            </button>
-            
-            <div class="load-details" id="load-details-2">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Pickup City:</span>
-                  <span class="load-value">Los Angeles, CA</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-26T10:00">Dec 26, 10:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-26T14:00">Dec 26, 02:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-3891 / TRL-7654</span>
-                </div>
-              </div>
-              
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Delivery Point:</span>
-                  <span class="load-value">Seattle, WA</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-28T08:00">Dec 28, 08:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-28T12:00">Dec 28, 12:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-3891 / TRL-7654</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-        
-        <!-- Load Item 3 -->
-        <article class="load-item" data-progress="25" role="listitem">
-          <div class="load-content">
-            <button class="load-toggle" aria-expanded="false" aria-controls="load-details-3">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Load Number:</span>
-                  <span class="load-value load-number">LD-10301</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Shipper:</span>
-                  <span class="load-value">Premier Distribution</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Product:</span>
-                  <span class="load-value">Food & Beverage</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Status:</span>
-                  <span class="status-badge">Pending</span>
-                </div>
-              </div>
-              <span class="toggle-icon" aria-hidden="true"></span>
-            </button>
-            
-            <div class="load-details" id="load-details-3">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Pickup City:</span>
-                  <span class="load-value">Denver, CO</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-31T06:00">Dec 31, 06:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-31T10:00">Dec 31, 10:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-5672 / TRL-9823</span>
-                </div>
-              </div>
-              
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Delivery Point:</span>
-                  <span class="load-value">Phoenix, AZ</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2026-01-02T09:00">Jan 02, 09:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2026-01-02T13:00">Jan 02, 01:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-5672 / TRL-9823</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-        
-        <!-- Load Item 4 -->
-        <article class="load-item" data-progress="50" role="listitem">
-          <div class="load-content">
-            <button class="load-toggle" aria-expanded="false" aria-controls="load-details-4">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Load Number:</span>
-                  <span class="load-value load-number">LD-10289</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Shipper:</span>
-                  <span class="load-value">Midwest Transport LLC</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Product:</span>
-                  <span class="load-value">Construction Materials</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Status:</span>
-                  <span class="status-badge">In Transit</span>
-                </div>
-              </div>
-              <span class="toggle-icon" aria-hidden="true"></span>
-            </button>
-            
-            <div class="load-details" id="load-details-4">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Pickup City:</span>
-                  <span class="load-value">Atlanta, GA</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-27T07:00">Dec 27, 07:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-27T11:00">Dec 27, 11:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-2134 / TRL-5567</span>
-                </div>
-              </div>
-              
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Delivery Point:</span>
-                  <span class="load-value">Miami, FL</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-29T13:00">Dec 29, 01:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-29T17:00">Dec 29, 05:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-2134 / TRL-5567</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-        
-        <!-- Load Item 5 -->
-        <article class="load-item" data-progress="50" role="listitem">
-          <div class="load-content">
-            <button class="load-toggle" aria-expanded="false" aria-controls="load-details-5">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Load Number:</span>
-                  <span class="load-value load-number">LD-10267</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Shipper:</span>
-                  <span class="load-value">Northeast Supply Chain</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Product:</span>
-                  <span class="load-value">Pharmaceuticals</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Status:</span>
-                  <span class="status-badge">In Transit</span>
-                </div>
-              </div>
-              <span class="toggle-icon" aria-hidden="true"></span>
-            </button>
-            
-            <div class="load-details" id="load-details-5">
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Pickup City:</span>
-                  <span class="load-value">Boston, MA</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-29T09:00">Dec 29, 09:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Pickup:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-29T13:00">Dec 29, 01:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-8843 / TRL-2291</span>
-                </div>
-              </div>
-              
-              <div class="load-column">
-                <div class="load-info">
-                  <span class="load-label">Delivery Point:</span>
-                  <span class="load-value">New York, NY</span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Earliest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-30T10:00">Dec 30, 10:00 AM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Latest Delivery:</span>
-                  <span class="load-value">
-                    <time datetime="2025-12-30T14:00">Dec 30, 02:00 PM</time>
-                  </span>
-                </div>
-                <div class="load-info">
-                  <span class="load-label">Truck / Trailer:</span>
-                  <span class="load-value">TRK-8843 / TRL-2291</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-        
+    <div class="load-row" data-progress="75">
+      <div class="row-main">
+        <div class="col">
+          <div><strong>LD-10234</strong> ABC Manufacturing Co.</div>
+          <div>Industrial Equipment</div>
+        </div>
       </div>
-    </main>
+      <div class="row-details">
+        <div class="col">
+          <div>Chicago, IL</div>
+          <div>Dec 28, 08:00 AM - 12:00 PM</div>
+          <div>TRK-4523 / TRL-8901</div>
+        </div>
+        <div class="col">
+          <div>Dallas, TX</div>
+          <div>Dec 30, 02:00 PM - 06:00 PM</div>
+          <div>TRK-4523 / TRL-8901</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="load-row" data-progress="100">
+      <div class="row-main">
+        <div class="col">
+          <div><strong>LD-10198</strong> Global Logistics Inc.</div>
+          <div>Electronics</div>
+        </div>
+      </div>
+      <div class="row-details">
+        <div class="col">
+          <div>Los Angeles, CA</div>
+          <div>Dec 26, 10:00 AM - 02:00 PM</div>
+          <div>TRK-3891 / TRL-7654</div>
+        </div>
+        <div class="col">
+          <div>Seattle, WA</div>
+          <div>Dec 28, 08:00 AM - 12:00 PM</div>
+          <div>TRK-3891 / TRL-7654</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="load-row" data-progress="25">
+      <div class="row-main">
+        <div class="col">
+          <div><strong>LD-10301</strong> Premier Distribution</div>
+          <div>Food & Beverage</div>
+        </div>
+      </div>
+      <div class="row-details">
+        <div class="col">
+          <div>Denver, CO</div>
+          <div>Dec 31, 06:00 AM - 10:00 AM</div>
+          <div>TRK-5672 / TRL-9823</div>
+        </div>
+        <div class="col">
+          <div>Phoenix, AZ</div>
+          <div>Jan 02, 09:00 AM - 01:00 PM</div>
+          <div>TRK-5672 / TRL-9823</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="load-row" data-progress="50">
+      <div class="row-main">
+        <div class="col">
+          <div><strong>LD-10289</strong> Midwest Transport LLC</div>
+          <div>Construction Materials</div>
+        </div>
+      </div>
+      <div class="row-details">
+        <div class="col">
+          <div>Atlanta, GA</div>
+          <div>Dec 27, 07:00 AM - 11:00 AM</div>
+          <div>TRK-2134 / TRL-5567</div>
+        </div>
+        <div class="col">
+          <div>Miami, FL</div>
+          <div>Dec 29, 01:00 PM - 05:00 PM</div>
+          <div>TRK-2134 / TRL-5567</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="load-row" data-progress="50">
+      <div class="row-main">
+        <div class="col">
+          <div><strong>LD-10267</strong> Northeast Supply Chain</div>
+          <div>Pharmaceuticals</div>
+        </div>
+      </div>
+      <div class="row-details">
+        <div class="col">
+          <div>Boston, MA</div>
+          <div>Dec 29, 09:00 AM - 01:00 PM</div>
+          <div>TRK-8843 / TRL-2291</div>
+        </div>
+        <div class="col">
+          <div>New York, NY</div>
+          <div>Dec 30, 10:00 AM - 02:00 PM</div>
+          <div>TRK-8843 / TRL-2291</div>
+        </div>
+      </div>
+    </div>
+    
   </div>
   
   <script>
-    'use strict';
-    
-    // ==================
-    // Constants
-    // ==================
-    const MOBILE_BREAKPOINT = 768;
-    
-    // ==================
-    // Toggle Functions
-    // ==================
-    function toggleLoadDetails(button) {
-      const isExpanded = button.getAttribute('aria-expanded') === 'true';
-      const detailsId = button.getAttribute('aria-controls');
-      const details = document.getElementById(detailsId);
-      
-      if (!details) return;
-      
-      // Toggle state
-      button.setAttribute('aria-expanded', !isExpanded);
-      details.classList.toggle('expanded');
-    }
-    
-    function handleToggleClick(event) {
-      // Only handle clicks on mobile
-      if (window.innerWidth >= MOBILE_BREAKPOINT) return;
-      
-      const button = event.currentTarget;
-      toggleLoadDetails(button);
-    }
-    
-    function handleToggleKeydown(event) {
-      // Only handle on mobile
-      if (window.innerWidth >= MOBILE_BREAKPOINT) return;
-      
-      // Handle Enter and Space keys
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        const button = event.currentTarget;
-        toggleLoadDetails(button);
-      }
-    }
-    
-    // ==================
-    // Responsive Handling
-    // ==================
-    function handleResize() {
-      const toggleButtons = document.querySelectorAll('.load-toggle');
-      
-      if (window.innerWidth >= MOBILE_BREAKPOINT) {
-        // Desktop: Expand all and disable toggles
-        toggleButtons.forEach(button => {
-          const detailsId = button.getAttribute('aria-controls');
-          const details = document.getElementById(detailsId);
-          
-          button.setAttribute('aria-expanded', 'true');
-          if (details) {
-            details.classList.add('expanded');
-          }
-        });
-      } else {
-        // Mobile: Collapse all by default
-        toggleButtons.forEach(button => {
-          const wasExpanded = button.getAttribute('aria-expanded') === 'true';
-          // Keep current state if already interacted, otherwise collapse
-          if (!button.dataset.interacted) {
-            const detailsId = button.getAttribute('aria-controls');
-            const details = document.getElementById(detailsId);
-            
-            button.setAttribute('aria-expanded', 'false');
-            if (details) {
-              details.classList.remove('expanded');
-            }
-          }
-        });
-      }
-    }
-    
-    // Debounce resize handler
-    let resizeTimeout;
-    function debounceResize() {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(handleResize, 150);
-    }
-    
-    // ==================
-    // Initialization
-    // ==================
-    document.addEventListener('DOMContentLoaded', () => {
-      // Set up toggle buttons
-      const toggleButtons = document.querySelectorAll('.load-toggle');
-      
-      toggleButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-          handleToggleClick(event);
-          button.dataset.interacted = 'true';
-        });
-        
-        button.addEventListener('keydown', (event) => {
-          handleToggleKeydown(event);
-          button.dataset.interacted = 'true';
-        });
+    document.querySelectorAll('.load-row').forEach(row => {
+      row.addEventListener('click', () => {
+        if (window.innerWidth < 768) {
+          row.querySelector('.row-details').classList.toggle('open');
+        }
       });
-      
-      // Handle window resize
-      window.addEventListener('resize', debounceResize);
-      
-      // Initial setup based on viewport
-      handleResize();
-      
-      console.log('Load Display initialized with', toggleButtons.length, 'load items');
     });
   </script>
 </body>
