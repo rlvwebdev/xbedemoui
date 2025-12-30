@@ -17,27 +17,25 @@
     }
     
     :root {
-      --primary-color: #2563eb;
-      --success-color: #10b981;
-      --warning-color: #f59e0b;
-      --danger-color: #ef4444;
-      --text-color: #1f2937;
-      --text-muted: #6b7280;
-      --bg-color: #f9fafb;
-      --card-bg: #ffffff;
-      --border-color: #e5e7eb;
-      --progress-bg: rgba(37, 99, 235, 0.15);
-      --spacing: 16px;
-      --border-radius: 8px;
-      --transition: all 0.3s ease;
+      --text-color: #333;
+      --text-muted: #666;
+      --border-color: #ddd;
+      --row-bg: #fff;
+      --row-alt-bg: #f8f8f8;
+      --row-hover: #f0f0f0;
+      --header-bg: #e9e9e9;
+      --progress-25: #fee;
+      --progress-50: #ffe;
+      --progress-75: #eff;
+      --progress-100: #efe;
     }
     
     body {
-      font-family: system-ui, -apple-system, -webkit-system-font, 'Segoe UI', sans-serif;
-      line-height: 1.6;
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
       color: var(--text-color);
-      background-color: var(--bg-color);
-      padding: var(--spacing);
+      background-color: #fff;
+      padding: 20px;
     }
     
     /* ==================
@@ -49,60 +47,59 @@
     }
     
     header {
-      background-color: var(--card-bg);
-      padding: calc(var(--spacing) * 1.5);
-      border-radius: var(--border-radius);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      margin-bottom: calc(var(--spacing) * 1.5);
+      background-color: var(--header-bg);
+      padding: 16px 20px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 20px;
     }
     
     h1 {
-      color: var(--primary-color);
-      font-size: 1.875rem;
-      font-weight: 700;
+      font-size: 1.5rem;
+      font-weight: 600;
     }
     
     /* ==================
        Load List
        ================== */
     .load-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing);
+      border: 1px solid var(--border-color);
     }
     
     .load-item {
-      background-color: var(--card-bg);
-      border-radius: var(--border-radius);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      position: relative;
-      transition: var(--transition);
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--row-bg);
+      cursor: pointer;
+    }
+    
+    .load-item:last-child {
+      border-bottom: none;
     }
     
     .load-item:hover {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: var(--row-hover);
     }
     
-    /* Progress Bar Background */
-    .load-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      background: linear-gradient(90deg, var(--progress-bg) 0%, transparent 100%);
-      transition: width 0.5s ease;
-      z-index: 0;
+    /* Progress indicator */
+    .load-item[data-progress="25"] {
+      background-color: var(--progress-25);
+    }
+    
+    .load-item[data-progress="50"] {
+      background-color: var(--progress-50);
+    }
+    
+    .load-item[data-progress="75"] {
+      background-color: var(--progress-75);
+    }
+    
+    .load-item[data-progress="100"] {
+      background-color: var(--progress-100);
     }
     
     .load-content {
-      position: relative;
-      z-index: 1;
       display: grid;
       grid-template-columns: 1fr;
-      gap: var(--spacing);
-      padding: var(--spacing);
+      padding: 12px 16px;
     }
     
     /* ==================
@@ -111,135 +108,94 @@
     .load-column {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .load-column-header {
-      font-weight: 600;
-      color: var(--primary-color);
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.25rem;
+      gap: 8px;
     }
     
     .load-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 8px;
+      align-items: baseline;
     }
     
     .load-label {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       color: var(--text-muted);
-      font-weight: 500;
     }
     
     .load-value {
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
       color: var(--text-color);
-      font-weight: 500;
     }
     
     .load-number {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--primary-color);
+      font-size: 1.125rem;
+      font-weight: 600;
     }
     
     /* Mobile Toggle Button */
     .load-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
       width: 100%;
       background: none;
       border: none;
       padding: 0;
       cursor: pointer;
       text-align: left;
+      gap: 16px;
     }
     
     .toggle-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      background-color: var(--primary-color);
-      color: white;
-      border-radius: 50%;
       font-size: 1.25rem;
-      transition: var(--transition);
-      flex-shrink: 0;
+      line-height: 1;
+      color: var(--text-muted);
     }
     
-    .load-toggle[aria-expanded="true"] .toggle-icon {
-      transform: rotate(180deg);
+    .load-toggle[aria-expanded="true"] .toggle-icon::before {
+      content: '−';
+    }
+    
+    .load-toggle[aria-expanded="false"] .toggle-icon::before {
+      content: '+';
     }
     
     /* Hidden details on mobile */
     .load-details {
       display: none;
       grid-template-columns: 1fr;
-      gap: var(--spacing);
-      padding-top: var(--spacing);
+      gap: 16px;
+      padding-top: 12px;
       border-top: 1px solid var(--border-color);
-      margin-top: var(--spacing);
+      margin-top: 12px;
     }
     
     .load-details.expanded {
       display: grid;
     }
     
-    /* Divider between sections */
-    .load-divider {
-      height: 1px;
-      background-color: var(--border-color);
-      display: none;
-    }
-    
     /* Status Badge */
     .status-badge {
       display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
+      padding: 2px 8px;
+      border: 1px solid var(--border-color);
       font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .status-pending {
-      background-color: #fef3c7;
-      color: #92400e;
-    }
-    
-    .status-in-transit {
-      background-color: #dbeafe;
-      color: #1e40af;
-    }
-    
-    .status-delivered {
-      background-color: #d1fae5;
-      color: #065f46;
+      font-weight: 500;
     }
     
     /* ==================
        Responsive Design
        ================== */
     @media (min-width: 768px) {
-      h1 {
-        font-size: 2.25rem;
-      }
-      
       .load-content {
         grid-template-columns: repeat(3, 1fr);
-        padding: calc(var(--spacing) * 1.5);
+        gap: 20px;
       }
       
       .load-toggle {
         pointer-events: none;
+        grid-template-columns: 1fr 1fr 1fr;
       }
       
       .toggle-icon {
@@ -248,40 +204,6 @@
       
       .load-details {
         display: contents;
-      }
-      
-      .load-divider {
-        display: block;
-        grid-column: 1 / -1;
-      }
-      
-      /* Show progress across full row on desktop */
-      .load-item::before {
-        width: var(--progress-width, 0%);
-      }
-    }
-    
-    @media (max-width: 767px) {
-      /* Progress only behind column 1 on mobile */
-      .load-column:first-child {
-        position: relative;
-      }
-      
-      .load-column:first-child::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -16px;
-        right: -16px;
-        height: 100%;
-        background: linear-gradient(90deg, var(--progress-bg) 0%, transparent 100%);
-        width: var(--progress-width, 0%);
-        z-index: -1;
-        border-radius: var(--border-radius);
-      }
-      
-      .load-item::before {
-        display: none;
       }
     }
     
@@ -311,74 +233,73 @@
       <div class="load-list" role="list">
         
         <!-- Load Item 1 -->
-        <article class="load-item" style="--progress-width: 75%;" role="listitem">
+        <article class="load-item" data-progress="75" role="listitem">
           <div class="load-content">
             <button class="load-toggle" aria-expanded="false" aria-controls="load-details-1">
               <div class="load-column">
-                <div class="load-column-header">Load Information</div>
                 <div class="load-info">
-                  <span class="load-number">LD-10234</span>
+                  <span class="load-label">Load Number:</span>
+                  <span class="load-value load-number">LD-10234</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Shipper</span>
+                  <span class="load-label">Shipper:</span>
                   <span class="load-value">ABC Manufacturing Co.</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Product</span>
+                  <span class="load-label">Product:</span>
                   <span class="load-value">Industrial Equipment</span>
                 </div>
                 <div class="load-info">
-                  <span class="status-badge status-in-transit">In Transit</span>
+                  <span class="load-label">Status:</span>
+                  <span class="status-badge">In Transit</span>
                 </div>
               </div>
-              <span class="toggle-icon" aria-hidden="true">▼</span>
+              <span class="toggle-icon" aria-hidden="true"></span>
             </button>
             
             <div class="load-details" id="load-details-1">
               <div class="load-column">
-                <div class="load-column-header">Pickup Details</div>
                 <div class="load-info">
-                  <span class="load-label">City</span>
+                  <span class="load-label">Pickup City:</span>
                   <span class="load-value">Chicago, IL</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Pickup</span>
+                  <span class="load-label">Earliest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-28T08:00">Dec 28, 08:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Pickup</span>
+                  <span class="load-label">Latest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-28T12:00">Dec 28, 12:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-4523 / TRL-8901</span>
                 </div>
               </div>
               
               <div class="load-column">
-                <div class="load-column-header">Delivery Details</div>
                 <div class="load-info">
-                  <span class="load-label">Destination</span>
+                  <span class="load-label">Delivery Point:</span>
                   <span class="load-value">Dallas, TX</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Delivery</span>
+                  <span class="load-label">Earliest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-30T14:00">Dec 30, 02:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Delivery</span>
+                  <span class="load-label">Latest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-30T18:00">Dec 30, 06:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-4523 / TRL-8901</span>
                 </div>
               </div>
@@ -387,74 +308,73 @@
         </article>
         
         <!-- Load Item 2 -->
-        <article class="load-item" style="--progress-width: 100%;" role="listitem">
+        <article class="load-item" data-progress="100" role="listitem">
           <div class="load-content">
             <button class="load-toggle" aria-expanded="false" aria-controls="load-details-2">
               <div class="load-column">
-                <div class="load-column-header">Load Information</div>
                 <div class="load-info">
-                  <span class="load-number">LD-10198</span>
+                  <span class="load-label">Load Number:</span>
+                  <span class="load-value load-number">LD-10198</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Shipper</span>
+                  <span class="load-label">Shipper:</span>
                   <span class="load-value">Global Logistics Inc.</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Product</span>
+                  <span class="load-label">Product:</span>
                   <span class="load-value">Electronics</span>
                 </div>
                 <div class="load-info">
-                  <span class="status-badge status-delivered">Delivered</span>
+                  <span class="load-label">Status:</span>
+                  <span class="status-badge">Delivered</span>
                 </div>
               </div>
-              <span class="toggle-icon" aria-hidden="true">▼</span>
+              <span class="toggle-icon" aria-hidden="true"></span>
             </button>
             
             <div class="load-details" id="load-details-2">
               <div class="load-column">
-                <div class="load-column-header">Pickup Details</div>
                 <div class="load-info">
-                  <span class="load-label">City</span>
+                  <span class="load-label">Pickup City:</span>
                   <span class="load-value">Los Angeles, CA</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Pickup</span>
+                  <span class="load-label">Earliest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-26T10:00">Dec 26, 10:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Pickup</span>
+                  <span class="load-label">Latest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-26T14:00">Dec 26, 02:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-3891 / TRL-7654</span>
                 </div>
               </div>
               
               <div class="load-column">
-                <div class="load-column-header">Delivery Details</div>
                 <div class="load-info">
-                  <span class="load-label">Destination</span>
+                  <span class="load-label">Delivery Point:</span>
                   <span class="load-value">Seattle, WA</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Delivery</span>
+                  <span class="load-label">Earliest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-28T08:00">Dec 28, 08:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Delivery</span>
+                  <span class="load-label">Latest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-28T12:00">Dec 28, 12:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-3891 / TRL-7654</span>
                 </div>
               </div>
@@ -463,74 +383,73 @@
         </article>
         
         <!-- Load Item 3 -->
-        <article class="load-item" style="--progress-width: 25%;" role="listitem">
+        <article class="load-item" data-progress="25" role="listitem">
           <div class="load-content">
             <button class="load-toggle" aria-expanded="false" aria-controls="load-details-3">
               <div class="load-column">
-                <div class="load-column-header">Load Information</div>
                 <div class="load-info">
-                  <span class="load-number">LD-10301</span>
+                  <span class="load-label">Load Number:</span>
+                  <span class="load-value load-number">LD-10301</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Shipper</span>
+                  <span class="load-label">Shipper:</span>
                   <span class="load-value">Premier Distribution</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Product</span>
+                  <span class="load-label">Product:</span>
                   <span class="load-value">Food & Beverage</span>
                 </div>
                 <div class="load-info">
-                  <span class="status-badge status-pending">Pending</span>
+                  <span class="load-label">Status:</span>
+                  <span class="status-badge">Pending</span>
                 </div>
               </div>
-              <span class="toggle-icon" aria-hidden="true">▼</span>
+              <span class="toggle-icon" aria-hidden="true"></span>
             </button>
             
             <div class="load-details" id="load-details-3">
               <div class="load-column">
-                <div class="load-column-header">Pickup Details</div>
                 <div class="load-info">
-                  <span class="load-label">City</span>
+                  <span class="load-label">Pickup City:</span>
                   <span class="load-value">Denver, CO</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Pickup</span>
+                  <span class="load-label">Earliest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-31T06:00">Dec 31, 06:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Pickup</span>
+                  <span class="load-label">Latest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-31T10:00">Dec 31, 10:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-5672 / TRL-9823</span>
                 </div>
               </div>
               
               <div class="load-column">
-                <div class="load-column-header">Delivery Details</div>
                 <div class="load-info">
-                  <span class="load-label">Destination</span>
+                  <span class="load-label">Delivery Point:</span>
                   <span class="load-value">Phoenix, AZ</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Delivery</span>
+                  <span class="load-label">Earliest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2026-01-02T09:00">Jan 02, 09:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Delivery</span>
+                  <span class="load-label">Latest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2026-01-02T13:00">Jan 02, 01:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-5672 / TRL-9823</span>
                 </div>
               </div>
@@ -539,74 +458,73 @@
         </article>
         
         <!-- Load Item 4 -->
-        <article class="load-item" style="--progress-width: 60%;" role="listitem">
+        <article class="load-item" data-progress="50" role="listitem">
           <div class="load-content">
             <button class="load-toggle" aria-expanded="false" aria-controls="load-details-4">
               <div class="load-column">
-                <div class="load-column-header">Load Information</div>
                 <div class="load-info">
-                  <span class="load-number">LD-10289</span>
+                  <span class="load-label">Load Number:</span>
+                  <span class="load-value load-number">LD-10289</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Shipper</span>
+                  <span class="load-label">Shipper:</span>
                   <span class="load-value">Midwest Transport LLC</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Product</span>
+                  <span class="load-label">Product:</span>
                   <span class="load-value">Construction Materials</span>
                 </div>
                 <div class="load-info">
-                  <span class="status-badge status-in-transit">In Transit</span>
+                  <span class="load-label">Status:</span>
+                  <span class="status-badge">In Transit</span>
                 </div>
               </div>
-              <span class="toggle-icon" aria-hidden="true">▼</span>
+              <span class="toggle-icon" aria-hidden="true"></span>
             </button>
             
             <div class="load-details" id="load-details-4">
               <div class="load-column">
-                <div class="load-column-header">Pickup Details</div>
                 <div class="load-info">
-                  <span class="load-label">City</span>
+                  <span class="load-label">Pickup City:</span>
                   <span class="load-value">Atlanta, GA</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Pickup</span>
+                  <span class="load-label">Earliest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-27T07:00">Dec 27, 07:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Pickup</span>
+                  <span class="load-label">Latest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-27T11:00">Dec 27, 11:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-2134 / TRL-5567</span>
                 </div>
               </div>
               
               <div class="load-column">
-                <div class="load-column-header">Delivery Details</div>
                 <div class="load-info">
-                  <span class="load-label">Destination</span>
+                  <span class="load-label">Delivery Point:</span>
                   <span class="load-value">Miami, FL</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Delivery</span>
+                  <span class="load-label">Earliest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-29T13:00">Dec 29, 01:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Delivery</span>
+                  <span class="load-label">Latest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-29T17:00">Dec 29, 05:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-2134 / TRL-5567</span>
                 </div>
               </div>
@@ -615,74 +533,73 @@
         </article>
         
         <!-- Load Item 5 -->
-        <article class="load-item" style="--progress-width: 40%;" role="listitem">
+        <article class="load-item" data-progress="50" role="listitem">
           <div class="load-content">
             <button class="load-toggle" aria-expanded="false" aria-controls="load-details-5">
               <div class="load-column">
-                <div class="load-column-header">Load Information</div>
                 <div class="load-info">
-                  <span class="load-number">LD-10267</span>
+                  <span class="load-label">Load Number:</span>
+                  <span class="load-value load-number">LD-10267</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Shipper</span>
+                  <span class="load-label">Shipper:</span>
                   <span class="load-value">Northeast Supply Chain</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Product</span>
+                  <span class="load-label">Product:</span>
                   <span class="load-value">Pharmaceuticals</span>
                 </div>
                 <div class="load-info">
-                  <span class="status-badge status-in-transit">In Transit</span>
+                  <span class="load-label">Status:</span>
+                  <span class="status-badge">In Transit</span>
                 </div>
               </div>
-              <span class="toggle-icon" aria-hidden="true">▼</span>
+              <span class="toggle-icon" aria-hidden="true"></span>
             </button>
             
             <div class="load-details" id="load-details-5">
               <div class="load-column">
-                <div class="load-column-header">Pickup Details</div>
                 <div class="load-info">
-                  <span class="load-label">City</span>
+                  <span class="load-label">Pickup City:</span>
                   <span class="load-value">Boston, MA</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Pickup</span>
+                  <span class="load-label">Earliest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-29T09:00">Dec 29, 09:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Pickup</span>
+                  <span class="load-label">Latest Pickup:</span>
                   <span class="load-value">
                     <time datetime="2025-12-29T13:00">Dec 29, 01:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-8843 / TRL-2291</span>
                 </div>
               </div>
               
               <div class="load-column">
-                <div class="load-column-header">Delivery Details</div>
                 <div class="load-info">
-                  <span class="load-label">Destination</span>
+                  <span class="load-label">Delivery Point:</span>
                   <span class="load-value">New York, NY</span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Earliest Delivery</span>
+                  <span class="load-label">Earliest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-30T10:00">Dec 30, 10:00 AM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Latest Delivery</span>
+                  <span class="load-label">Latest Delivery:</span>
                   <span class="load-value">
                     <time datetime="2025-12-30T14:00">Dec 30, 02:00 PM</time>
                   </span>
                 </div>
                 <div class="load-info">
-                  <span class="load-label">Truck / Trailer</span>
+                  <span class="load-label">Truck / Trailer:</span>
                   <span class="load-value">TRK-8843 / TRL-2291</span>
                 </div>
               </div>
